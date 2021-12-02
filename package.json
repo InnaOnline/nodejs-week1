@@ -1,0 +1,15 @@
+{
+  "name": "homework1",
+  "version": "1.0.0",
+  "description": "* Установка [NodeJS](https://nodejs.org/en/)  * Создаём приложение при помощи `npm init -y` * Работаем с файловой системой * Тестируем скрипт",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "directories": {
+    "example": "example"
+  }
+}
