@@ -4,12 +4,24 @@
   "description": "* Установка [NodeJS](https://nodejs.org/en/)  * Создаём приложение при помощи `npm init -y` * Работаем с файловой системой * Тестируем скрипт",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "eslint-config-standard": "^14.1.1"
+  },
   "directories": {
     "example": "example"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InnaOnline/nodejs-week1.git"
+  },
+  "bugs": {
+    "url": "https://github.com/InnaOnline/nodejs-week1/issues"
+  },
+  "homepage": "https://github.com/InnaOnline/nodejs-week1#readme"
 }
