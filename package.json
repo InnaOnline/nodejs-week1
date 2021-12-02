@@ -4,6 +4,7 @@
   "description": "* Установка [NodeJS](https://nodejs.org/en/)  * Создаём приложение при помощи `npm init -y` * Работаем с файловой системой * Тестируем скрипт",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
