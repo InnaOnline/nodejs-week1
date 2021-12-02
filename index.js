@@ -24,8 +24,12 @@ const args = yargs
     .epilog('Homework 1')
     .argv
 
-const sort = (directory, finalPath) => {
-    const files = fs.readdirSync(directory);
+    const sort = (directory, err) => {
+    const files = fs.readdir(directory, (err) => {
+        if (err) {
+            console.error(err);
+        }
+    });
 
     files.forEach(file => {
         const localBase = path.join(directory, file);
