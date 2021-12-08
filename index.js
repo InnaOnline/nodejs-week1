@@ -30,7 +30,7 @@ const args = yargs
   .epilog('Homework 1')
   .argv
 
-const config = {
+  const config = {
     entry: path.resolve(__dirname, args.entry),
     dist: path.resolve(__dirname, args.dist),
     delete: args.delete
@@ -38,6 +38,7 @@ const config = {
 
 const folder = path.normalize(path.join(__dirname, args.entry))
 const dist = path.normalize(path.join(__dirname, args.output))
+    
 
 class Observer {
     constructor(cb) {
@@ -50,7 +51,7 @@ class Observer {
                 }
 
                 return true
-            }
+            }   
         })
     }
 
@@ -64,10 +65,6 @@ class Observer {
         this.observers.splice(index, 1)
     }
 }
-
-const observer = new Observer(() => {
-    deleteFolder(folder)
-})
 
 function deleteFolder(folder) {
     (function recursive(src) {
@@ -105,6 +102,46 @@ function deleteFolder(folder) {
     })(folder)
 }
 
+function readdirSync(src) {
+    return new Promise((resolve, reject) => {
+        readdir(src, (err, files) =>{
+            if (err) reject(err)
+
+            resolve(files)
+        })
+    })
+}
+
+function statSync(src) {
+    return new Promise((resolve, reject) => {
+        stat(src, (err, stats) => {
+            if (err) reject(err)
+
+            resolve(stats)
+        })
+    })
+}
+
+function mkdirSync(src) {
+    return new Promise((resolve, reject) => {
+        createDir(src, (err) => {
+            if (err) reject(err)
+
+            resolve()
+        })
+    })
+}
+
+function copyFileSync(from, to) {
+    return new Promise((resolve, reject) => {
+        copyFile(from, to, (err) => {
+            if (err) reject(err)
+
+            resolve()
+        })
+    })
+}
+
 function createDir(path, cb) {
     mkdir(path, (err) => {
         if (err && err.code !== 'EEXIST') {
@@ -115,50 +152,39 @@ function createDir(path, cb) {
     })
 }
 
-function reader(src) {
-    observer.add(src)
-    readdir(src, (err, files) => {
-        if (err) throw err
+const promise = []
 
-        files.forEach((file) => {
-            const currentPath = path.resolve(src, file)
+async function reader(src) {
+    const files = await readdirSync(src)
 
-            observer.add(currentPath)
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        const currentPath = path.resolve(src, file)
+        const stats = await statSync(currentPath)
 
-            stat(currentPath, (err, stats) => {
-                if (err) throw err
+        if (stats.isFile()) {
+            await mkdirSync(dist)
 
-                if (stats.isFile()) {
-                    createDir(dist, (err) => {
-                        if (err) throw err
+            const localeDir = path.resolve(dist, file[0].toUpperCase())
+            const localeFile = path.resolve(localeDir, file)
 
-                        const localeDir = path.resolve(dist, file[0].toUpperCase())
-                        const localeFile = path.resolve(localeDir, file)
+            await mkdirSync(localeDir)
+            await copyFileSync(currentPath, localeFile)
+            counter++;
+            console.log('copyFile', `count: ${counter}`)
 
-                        createDir(localeDir, (err) => {
-                            if (err) throw err
-
-                            copyFile(currentPath, localeFile, (err) => {
-                                if (err) throw err
-                                counter++;
-                                console.log('copyFile', `count:${counter}`)
-                                observer.remove(currentPath)
-                            })
-                        })
-                    })
-                } else {
-                    reader(currentPath)
-                    observer.remove(src)
-                }
-            }) 
-        })
-
-        observer.remove(src)
-    })
+        } else {
+            await reader(currentPath)
+        }
+    }
 }
 
-try {
-    reader(folder)
-} catch (error) {
-    console.log(error)
-}
+(async () => {
+    try {
+        await reader(folder)
+        console.log('done!')
+
+    } catch (error) {
+        console.log(error)
+    }
+})()
