@@ -38,6 +38,7 @@ const config = {
 
 const folder = path.normalize(path.join(__dirname, args.entry))
 const dist = path.normalize(path.join(__dirname, args.output))
+const isDelete = args.delete
 
 class Observer {
     constructor(cb) {
@@ -66,7 +67,9 @@ class Observer {
 }
 
 const observer = new Observer(() => {
-    deleteFolder(folder)
+    if (isDelete) {
+        deleteFolder(folder)
+    }    
 })
 
 function deleteFolder(folder) {
