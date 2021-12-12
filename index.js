@@ -14,10 +14,10 @@ app.get('/', function(req, res){
             console.log(date);
         }, INTERVAL);
         
-        let TIMESTOP_time = setTimeout(() => {
+        let settime = setTimeout(() => {
             clearInterval(time);
             console.log('Дата и время на момент консольного вывода (UTC): ', date);
-            clearTimeout(TIMESTOP_time);
+            clearTimeout(settime);
             res.send('Дата и время на момент консольного вывода (UTC):' + date);
         }, TIMESTOP)
       });

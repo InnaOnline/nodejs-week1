@@ -30,41 +30,9 @@ const args = yargs
   .epilog('Homework 1')
   .argv
 
-  const config = {
-    entry: path.resolve(__dirname, args.entry),
-    dist: path.resolve(__dirname, args.dist),
-    delete: args.delete
-}
+const folder = path.resolve(__dirname, args.entry)
+const dist = path.resolve(__dirname, args.dist)
 
-const folder = path.normalize(path.join(__dirname, args.entry))
-const dist = path.normalize(path.join(__dirname, args.output))
-    
-
-class Observer {
-    constructor(cb) {
-        this.observers = new Proxy([], {
-            set(target, prop, value) {
-                target[prop] = value
-
-                if (target.length === 0) {
-                    cb()
-                }
-
-                return true
-            }   
-        })
-    }
-
-    add(observer) {
-        this.observers.push(observer)
-    }
-
-    remove(observer) {
-        const index = this.observers.findIndex(obs => obs === observer)
-
-        this.observers.splice(index, 1)
-    }
-}
 
 function deleteFolder(folder) {
     (function recursive(src) {
@@ -151,8 +119,6 @@ function createDir(path, cb) {
         cb(null, true)
     })
 }
-
-const promise = []
 
 async function reader(src) {
     const files = await readdirSync(src)
